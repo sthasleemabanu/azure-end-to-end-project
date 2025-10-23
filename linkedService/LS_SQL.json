@@ -1,0 +1,21 @@
+{
+	"name": "LS_SQL",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "LAPTOP-Q900A3LO\\SQLEXPRESS",
+			"database": "azure_logs",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "azurelogin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI4NWE3MjI2My00ODM1LTQ4ZTMtYTg0OS04NWE4OTc5YjY1M2IiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhostedIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

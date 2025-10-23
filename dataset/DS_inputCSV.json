@@ -1,0 +1,53 @@
+{
+	"name": "DS_inputCSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_CSV_input",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "maestro-v3.0.0.csv",
+				"container": "csvinput"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "canonical_composer",
+				"type": "String"
+			},
+			{
+				"name": "canonical_title",
+				"type": "String"
+			},
+			{
+				"name": "split",
+				"type": "String"
+			},
+			{
+				"name": "year",
+				"type": "String"
+			},
+			{
+				"name": "midi_filename",
+				"type": "String"
+			},
+			{
+				"name": "audio_filename",
+				"type": "String"
+			},
+			{
+				"name": "duration",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

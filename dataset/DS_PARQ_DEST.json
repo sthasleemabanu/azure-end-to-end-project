@@ -1,0 +1,21 @@
+{
+	"name": "DS_PARQ_DEST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SINK",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "csvdata",
+				"fileSystem": "adlsbronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

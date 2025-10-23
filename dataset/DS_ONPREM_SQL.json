@@ -1,0 +1,60 @@
+{
+	"name": "DS_ONPREM_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "jobid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "trigger_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "L2_switch_type",
+				"type": "varchar"
+			},
+			{
+				"name": "L3_switch_type",
+				"type": "varchar"
+			},
+			{
+				"name": "L4_switch_type",
+				"type": "varchar"
+			},
+			{
+				"name": "created_user",
+				"type": "varchar"
+			},
+			{
+				"name": "created_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "updated_user",
+				"type": "varchar"
+			},
+			{
+				"name": "updated_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_job"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
