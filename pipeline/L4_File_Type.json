@@ -1,9 +1,9 @@
 {
-	"name": "L3_CloudStorage",
+	"name": "L4_File_Type",
 	"properties": {
 		"activities": [
 			{
-				"name": "LU_get_File_Type",
+				"name": "LU_L4_File_Type",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -27,11 +27,11 @@
 				}
 			},
 			{
-				"name": "Cloud storage",
+				"name": "Switch1",
 				"type": "Switch",
 				"dependsOn": [
 					{
-						"activity": "LU_get_File_Type",
+						"activity": "LU_L4_File_Type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -39,40 +39,16 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"on": {
+						"value": "@activity('LU_L4_File_Type').output",
+						"type": "Expression"
+					},
 					"cases": [
 						{
-							"value": "GCP",
+							"value": "excel",
 							"activities": [
 								{
-									"name": "Wait2",
-									"type": "Wait",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"waitTimeInSeconds": 1
-									}
-								}
-							]
-						},
-						{
-							"value": "AWS",
-							"activities": [
-								{
-									"name": "Wait3",
-									"type": "Wait",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"waitTimeInSeconds": 1
-									}
-								}
-							]
-						},
-						{
-							"value": "AZURE",
-							"activities": [
-								{
-									"name": "exe_L4_PL",
+									"name": "ex_excel",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"policy": {
@@ -81,7 +57,49 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "L4_File_Type",
+											"referenceName": "PL_CPY_excel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "csv",
+							"activities": [
+								{
+									"name": "ex_csv",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_CPY_CSV",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "parq",
+							"activities": [
+								{
+									"name": "ex_parq",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_CPY_CSV_parq",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true
@@ -104,8 +122,6 @@
 				}
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2025-10-23T02:58:39Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
