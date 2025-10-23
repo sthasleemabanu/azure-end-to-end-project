@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "LU_L4_File_Type",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -24,6 +24,101 @@
 						"referenceName": "DS_ONPREM_SQL",
 						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [
+					{
+						"activity": "LU_L4_File_Type",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@activity('LU_L4_File_Type').output",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "excel",
+							"activities": [
+								{
+									"name": "ex_excel",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_CPY_excel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "csv",
+							"activities": [
+								{
+									"name": "ex_csv",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_CPY_CSV",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						},
+						{
+							"value": "parq",
+							"activities": [
+								{
+									"name": "ex_parq",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_CPY_CSV_parq",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true
+									}
+								}
+							]
+						}
+					],
+					"defaultActivities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
 				}
 			}
 		],

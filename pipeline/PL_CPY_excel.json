@@ -1,0 +1,252 @@
+{
+	"name": "PL_CPY_excel",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_CPY_CSV",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "canonical_composer",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "canonical_composer",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "canonical_title",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "canonical_title",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "split",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "split",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "year",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "year",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "midi_filename",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "midi_filename",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "audio_filename",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "audio_filename",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "duration",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "duration",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "file",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "file",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_inputCSV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_PARQ_DEST",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "PL_SP_Error",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PL_CPY_CSV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_error]",
+					"storedProcedureParameters": {
+						"error": {
+							"value": null,
+							"type": "String"
+						},
+						"errormsg": {
+							"value": null,
+							"type": "String"
+						},
+						"status": {
+							"value": "Success",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SQL",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_SP_error_out",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PL_CPY_CSV",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_error]",
+					"storedProcedureParameters": {
+						"error": {
+							"value": {
+								"value": "@activity('PL_CPY_CSV').output.error",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"errormsg": {
+							"value": {
+								"value": "@activity('PL_CPY_CSV').output.error",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"status": {
+							"value": "Failed",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SQL",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-10-23T01:49:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
