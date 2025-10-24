@@ -17,10 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": {
-							"value": "select distinct L3_switch_type from dbo.tbl_job a\r\njoin dbo.tbl_trigger b on a.trigger_id =b.trigger_id\r\nwhere b.trigger_name = '@{pipeline().parameters.Trigger}'\r\n\r\n",
-							"type": "Expression"
-						},
+						"sqlReaderQuery": "select distinct L3_switch_type from dbo.tbl_job a\r\njoin dbo.tbl_trigger b on a.trigger_id =b.trigger_id\r\nwhere b.trigger_name = '@{pipeline().parameters.Trigger}'\r\n\r\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -31,7 +28,7 @@
 				}
 			},
 			{
-				"name": "Cloud storage",
+				"name": "Cloudstorage",
 				"type": "Switch",
 				"dependsOn": [
 					{
@@ -44,7 +41,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"on": {
-						"value": "@activity('LU_get_L3_File_Type').output.firstRow.L3_switch_type",
+						"value": "@activity('LU_get_L3_File_Type').output.firstRow.l3_Switch_type",
 						"type": "Expression"
 					},
 					"cases": [
