@@ -1,0 +1,27 @@
+{
+	"name": "Trg_Sch_1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "L1_PL_Master_Ingestion",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Trigger": "Tr_sample_csv"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2025-10-23T08:36:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
