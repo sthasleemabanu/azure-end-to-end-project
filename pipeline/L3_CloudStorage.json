@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LU_get_File_Type",
+				"name": "LU_get_L3_File_Type",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "select distinct L3_switch_type from dbo.tbl_job a\r\njoin dbo.tbl_trigger b on a.trigger_id =b.trigger_id\r\nwhere b.trigger_name = '@{pipeline().parameters.Trigger}'\r\n\r\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -31,7 +32,7 @@
 				"type": "Switch",
 				"dependsOn": [
 					{
-						"activity": "LU_get_File_Type",
+						"activity": "LU_get_L3_File_Type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -39,6 +40,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"on": {
+						"value": "@activity('LU_get_L3_File_Type').output",
+						"type": "Expression"
+					},
 					"cases": [
 						{
 							"value": "GCP",
@@ -84,7 +89,13 @@
 											"referenceName": "L4_File_Type",
 											"type": "PipelineReference"
 										},
-										"waitOnCompletion": true
+										"waitOnCompletion": true,
+										"parameters": {
+											"Trigger": {
+												"value": "@pipeline().parameters.Trigger",
+												"type": "Expression"
+											}
+										}
 									}
 								}
 							]
@@ -104,6 +115,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"Trigger": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-10-23T02:58:39Z"
 	},
